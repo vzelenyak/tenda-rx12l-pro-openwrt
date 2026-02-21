@@ -1,0 +1,24 @@
+diff --git a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+index 9cdb56bc6a..c5ffe16914 100644
+--- a/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
++++ b/target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+@@ -150,7 +150,8 @@ mediatek_setup_interfaces()
+ 	smartrg,sdg-8622|\
+ 	smartrg,sdg-8632|\
+ 	smartrg,sdg-8733a|\
+-	yuncore,ax835)
++	yuncore,ax835|\
++	tenda,rx12l-pro)
+ 		ucidef_set_interfaces_lan_wan lan wan
+ 		;;
+ 	keenetic,kn-1812|\
+@@ -296,7 +297,8 @@ mediatek_setup_macs()
+ 		wan_mac=$(mtd_get_mac_ascii Bdata ethaddr_wan)
+ 		label_mac=$wan_mac
+ 		;;
+-	yuncore,ax835)
++	yuncore,ax835|\
++	tenda,rx12l-pro)
+ 		label_mac=$(mtd_get_mac_binary "Factory" 0x4)
+ 		;;
+ 	esac

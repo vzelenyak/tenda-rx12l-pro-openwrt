@@ -1,0 +1,50 @@
+name: Build OpenWrt for Tenda RX12L Pro
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential ccache git libncurses-dev python3-setuptools swig libssl-dev gettext rsync gawk unzip
+      
+      - name: Clone OpenWrt
+        run: git clone --depth 1 -b v23.05.5 https://github.com/openwrt/openwrt.git openwrt
+      
+      - name: Copy DTS file
+        run: cp patches/dts/mt7981b-tenda-rx12l-pro.dts openwrt/target/linux/mediatek/dts/
+      
+      - name: Apply patches
+        run: |
+          cd openwrt
+          sed -i 's/yuncore,ax835)/yuncore,ax835| tenda,rx12l-pro)/g' target/linux/mediatek/filogic/base-files/etc/board.d/02_network
+          sed -i 's/yuncore,ax835)/yuncore,ax835| tenda,rx12l-pro)/g' target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+          cat ../patches/filogic-addition.mk >> target/linux/mediatek/image/filogic.mk
+      
+      - name: Configure
+        run: |
+          cd openwrt
+          make defconfig
+          echo 'CONFIG_TARGET_mediatek=y' >> .config
+          echo 'CONFIG_TARGET_mediatek_filogic=y' >> .config
+          echo 'CONFIG_TARGET_mediatek_filogic_Default=y' >> .config
+          echo 'CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tenda_rx12l_pro=y' >> .config
+      
+      - name: Build
+        run: cd openwrt && make -j$(nproc)
+      
+      - name: Upload firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: openwrt-firmware
+          path: openwrt/bin/targets/mediatek/filogic/

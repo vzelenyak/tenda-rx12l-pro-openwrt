@@ -1,0 +1,14 @@
+diff --git a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+index 9e29f947b2..eaf14cc3e5 100644
+--- a/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
++++ b/target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+@@ -169,7 +169,8 @@ platform_do_upgrade() {
+ 	totolink,x6000r|\
+ 	wavlink,wl-wn573hx3|\
+ 	widelantech,wap430x|\
+-	yuncore,ax835)
++	yuncore,ax835|\
++	tenda,rx12l-pro)
+ 		default_do_upgrade "$1"
+ 		;;
+ 	dlink,aquila-pro-ai-m30-a1|\

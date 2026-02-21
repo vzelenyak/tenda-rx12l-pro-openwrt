@@ -11,7 +11,7 @@
 | Flash | 16MB SPI NOR |
 | WiFi | MT7976C (AX3000) |
 | Switch | MT7531AE |
-| Ports | 1x WAN + 4x LAN Gigabit Ethernet |
+| Ports | 4x Gigabit Ethernet (1x WAN + 3x LAN)
 
 ## Модель-донор
 [Cudy WR3000 V1](https://openwrt.org/toh/cudy/wr3000_v1) - аналогичное железо

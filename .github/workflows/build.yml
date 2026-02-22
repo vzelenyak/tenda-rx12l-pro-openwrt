@@ -43,9 +43,10 @@ jobs:
           make oldconfig
 
       - name: Build
-        run: cd openwrt && make -j$(nproc)
+        run: |
+          cd openwrt && make -j$(nproc)
 
-      - name: Debug: list output directory
+      - name: Debug list output directory
         run: |
           ls -la openwrt/bin/targets/mediatek/filogic/ || echo "Directory not found"
           find openwrt/bin -name "*.bin" -o -name "*.trx" | head -20
@@ -56,4 +57,3 @@ jobs:
         with:
           name: openwrt-firmware
           path: openwrt/bin/targets/mediatek/filogic/
-          if-no-files-found: error

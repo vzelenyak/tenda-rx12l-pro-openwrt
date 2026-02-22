@@ -50,6 +50,13 @@ jobs:
           echo CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tenda_rx12l_pro=y >> .config
           make defconfig
 
+      - name: Pre-build verify
+        run: |
+          cd openwrt/target/linux
+          make --debug=basic -n 2>&1 | head -20
+          make -p 2>&1 | grep -i "tenda\|rx12l" | head -10
+          make --debug=verbose -n config 2>&1 | head -20
+
       - name: Build
         run: |
           cd openwrt && make -j$(nproc)

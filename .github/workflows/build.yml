@@ -22,14 +22,6 @@ jobs:
       - name: Clone OpenWrt
         run: git clone --depth 1 -b v23.05.5 https://github.com/openwrt/openwrt.git openwrt
 
-      - name: Pre-build check
-        run: |
-          cd openwrt
-          echo "=== Checking syntax with dry-run ==="
-          make --debug=basic -n target/linux/compile 2>&1 | head -30
-          echo "=== Checking device variables ==="
-          make -p 2>&1 | grep -i "tenda\|rx12l" | head -10
-
       - name: Copy DTS file
         run: cp patches/dts/mt7981b-tenda-rx12l-pro.dts openwrt/target/linux/mediatek/dts/
 
@@ -53,17 +45,26 @@ jobs:
       - name: Pre-build verify
         run: |
           cd openwrt
-          make --debug=basic -n target/linux/compile 2>&1 | head -20
-          make -p 2>&1 | grep -i "tenda\|rx12l" | head -10
+          echo "=== Checking .config ==="
+          grep -i "tenda\|rx12l" .config || echo "NOT FOUND in .config"
+          echo "=== Checking filogic.mk ==="
+          grep -i "tenda" target/linux/mediatek/image/filogic.mk || echo "NOT FOUND in filogic.mk"
 
       - name: Build
         run: |
-          cd openwrt && make -j$(nproc)
+          cd openwrt && make -j$(nproc) --debug > make.log 2>&1
 
       - name: Debug list output directory
         run: |
           ls -la openwrt/bin/targets/mediatek/filogic/ || echo "Directory not found"
           find openwrt/bin -name "*.bin" -o -name "*.trx" | head -20
+
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: openwrt/make.log
 
       - name: Upload artifacts
         if: success()

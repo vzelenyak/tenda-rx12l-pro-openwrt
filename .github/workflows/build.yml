@@ -40,7 +40,6 @@ jobs:
           echo CONFIG_TARGET_mediatek_filogic_Default=y >> .config
           echo CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tenda_rx12l_pro=y >> .config
           make defconfig
-          make oldconfig
 
       - name: Build
         run: |

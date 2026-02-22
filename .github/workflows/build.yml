@@ -48,6 +48,10 @@ jobs:
           grep -i "tenda\|rx12l" .config || echo "NOT FOUND in .config"
           echo "=== Checking filogic.mk ==="
           grep -i "tenda" target/linux/mediatek/image/filogic.mk || echo "NOT FOUND in filogic.mk"
+          echo "=== Dry-run target/linux ==="
+          make --debug=basic -n target/linux/compile 2>&1 | head -10
+          echo "=== Verbose config check ==="
+          make --debug=verbose -n target/linux/config 2>&1 | head -10
 
       - name: Build
         run: |

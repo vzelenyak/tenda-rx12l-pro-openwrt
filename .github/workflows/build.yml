@@ -30,7 +30,20 @@ jobs:
           cd openwrt
           sed -i 's/yuncore,ax835)/yuncore,ax835| tenda,rx12l-pro)/g' target/linux/mediatek/filogic/base-files/etc/board.d/02_network
           sed -i 's/yuncore,ax835)/yuncore,ax835| tenda,rx12l-pro)/g' target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-          cat ../patches/filogic-addition.mk >> target/linux/mediatek/image/filogic.mk
+      
+      - name: Configure device
+        run: |
+          cd openwrt
+          cat >> target/linux/mediatek/image/filogic.mk << 'EOFDEVICE'
+define Device/tenda_rx12l-pro
+  DEVICE_VENDOR := Tenda
+  DEVICE_MODEL := RX12L Pro
+  DEVICE_DTS := mt7981b-tenda-rx12l-pro
+  DEVICE_DTS_DIR := ../dts
+  DEVICE_PACKAGES := kmod-mt7915e kmod-mt7981-firmware mt7981-wo-firmware
+enddef
+TARGET_DEVICES += tenda_rx12l-pro
+EOFDEVICE
       
       - name: Configure
         run: |
@@ -44,28 +57,9 @@ jobs:
       - name: Build
         run: cd openwrt && make -j$(nproc) 2>&1 | tee build.log
       
-      - name: Check build output
-        run: |
-          ls -la openwrt/bin/targets/mediatek/filogic/ || echo "Build directory not found"
-          cat openwrt/build.log | tail -50
-      
-      - name: Upload sysupgrade
+      - name: Upload artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: openwrt-sysupgrade
-          path: openwrt/bin/targets/mediatek/filogic/*tenda_rx12l_pro*sysupgrade*.bin
-          
-      - name: Upload initramfs
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: openwrt-initramfs
-          path: openwrt/bin/targets/mediatek/filogic/*tenda_rx12l_pro*initramfs*.bin
-      
-      - name: Upload all files
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: openwrt-all-files
+          name: openwrt-firmware
           path: openwrt/bin/targets/mediatek/filogic/

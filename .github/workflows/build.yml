@@ -22,6 +22,14 @@ jobs:
       - name: Clone OpenWrt
         run: git clone --depth 1 -b v23.05.5 https://github.com/openwrt/openwrt.git openwrt
 
+      - name: Pre-build check
+        run: |
+          cd openwrt
+          echo "=== Checking syntax with dry-run ==="
+          make --debug=basic -n target/linux/compile 2>&1 | head -30
+          echo "=== Checking device variables ==="
+          make -p 2>&1 | grep -i "tenda\|rx12l" | head -10
+
       - name: Copy DTS file
         run: cp patches/dts/mt7981b-tenda-rx12l-pro.dts openwrt/target/linux/mediatek/dts/
 
@@ -41,18 +49,6 @@ jobs:
           echo CONFIG_TARGET_mediatek_filogic_Default=y >> .config
           echo CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tenda_rx12l_pro=y >> .config
           make defconfig
-
-      - name: Debug target/linux dry-run
-        run: |
-          cd openwrt
-          echo "=== Dry-run target/linux ==="
-          make --debug=basic -n target/linux/compile 2>&1 | head -50
-          echo "=== Checking device config ==="
-          make -p 2>&1 | grep -i "tenda\|rx12l" | head -20
-
-      - name: Debug target/linux install
-        run: |
-          cd openwrt && make target/linux/install V=s 2>&1 | tail -100
 
       - name: Build
         run: |

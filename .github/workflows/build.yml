@@ -52,10 +52,10 @@ jobs:
 
       - name: Pre-build verify
         run: |
-          cd openwrt/target/linux
-          make --debug=basic -n 2>&1 | head -20
+          cd openwrt
+          make --debug=basic -n target/linux/compile 2>&1 | head -20
           make -p 2>&1 | grep -i "tenda\|rx12l" | head -10
-          make --debug=verbose -n config 2>&1 | head -20
+          make --debug=verbose -n target/linux/config 2>&1 | head -20
 
       - name: Build
         run: |

@@ -35,6 +35,7 @@ jobs:
       - name: Configure
         run: |
           cd openwrt
+          make defconfig
           echo CONFIG_TARGET_mediatek=y >> .config
           echo CONFIG_TARGET_mediatek_filogic=y >> .config
           echo CONFIG_TARGET_mediatek_filogic_Default=y >> .config

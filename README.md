@@ -40,7 +40,7 @@ sudo apt-get install -y build-essential ccache libncurses5 libncursesw5-dev \
 
 ```bash
 # Clone repository
-git clone https://github.com/your-repo/tenda-rx12l-pro-openwrt.git
+git clone https://github.com/vzelenyak/tenda-rx12l-pro-openwrt.git
 cd tenda-rx12l-pro-openwrt
 
 # Initialize submodules

@@ -19,8 +19,11 @@ OpenWrt v23.05.5 support for Tenda RX12L Pro router.
 - WiFi 6 (802.11ax) with MU-MIMO and OFDMA
 - Gigabit Ethernet (1 WAN + 3 LAN)
 - SPI NOR Flash
-- LED configuration
 - GPIO buttons (Reset, WPS)
+
+## Based On
+
+This device configuration is based on Cudy WR3000 v1, which has similar hardware specifications.
 
 ## Build Instructions
 
@@ -77,28 +80,6 @@ bin/targets/mediatek/filogic/
 Files:
 - `openwrt-mediatek-filogic-tenda_rx12l-pro-initramfs-kernel.bin` - Initramfs kernel (for first flash)
 - `openwrt-mediatek-filogic-tenda_rx12l-pro-squashfs-sysupgrade.bin` - Sysupgrade image
-
-## Flash Instructions
-
-### Via Uboot (First Flash)
-
-1. Connect to router via serial console
-2. Set bootargs to load initramfs:
-```
-setenv bootargs console=ttyS0,115200 root=/dev/ram0
-tftpboot 0x44000000 openwrt-mediatek-filogic-tenda_rx12l-pro-initramfs-kernel.bin
-bootm
-```
-
-### Via Sysupgrade
-
-```bash
-# SSH to router
-ssh root@192.168.1.1
-
-# Upload sysupgrade image
-sysupgrade -v /tmp/openwrt-mediatek-filogic-tenda_rx12l-pro-squashfs-sysupgrade.bin
-```
 
 ## Notes
 

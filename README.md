@@ -1,91 +1,121 @@
 # Tenda RX12L Pro OpenWrt
 
-## Статус
-**В разработке** - устройство ещё не добавлено в официальный OpenWrt
+OpenWrt v23.05.5 support for Tenda RX12L Pro router.
 
-## Железо
-| Параметр | Значение |
-|----------|----------|
-| SoC | MediaTek MT7981B (1.3GHz dual-core) |
+## Specifications
+
+| Feature | Specification |
+|---------|---------------|
+| SoC | MediaTek MT7981B (Dual-core 1.3GHz Cortex-A53) |
 | RAM | 256MB DDR3 |
-| Flash | 16MB SPI NOR |
-| WiFi | MT7976C (AX3000) |
-| Switch | MT7531AE |
-| Ports | 4x Gigabit Ethernet (1x WAN + 3x LAN)
+| Flash | 16MB NOR SPI Flash |
+| Ethernet | 1x WAN + 3x LAN (1Gbps) |
+| WiFi | Dual-band AX3000 (2.4GHz: 574Mbps, 5GHz: 2402Mbps) |
+| Antennas | 5 external antennas |
+| USB | 1x USB 3.0 |
 
-## Модель-донор
-[Cudy WR3000 V1](https://openwrt.org/toh/cudy/wr3000_v1) - аналогичное железо
+## Features Supported
 
-## Инструкция по сборке
+- OpenWrt v23.05.5
+- WiFi 6 (802.11ax) with MU-MIMO and OFDMA
+- Gigabit Ethernet (1 WAN + 3 LAN)
+- USB 3.0
+- SPI NOR Flash
+- LED configuration
+- GPIO buttons (Reset, WPS)
 
-### 1. Установка зависимостей (Ubuntu/Debian)
+## Build Instructions
+
+### Prerequisites
+
 ```bash
-sudo apt update
-sudo apt install build-essential ccache git libncurses-dev python3-setuptools swig libssl-dev
+# Install required packages (Ubuntu/Debian)
+sudo apt-get update
+sudo apt-get install -y build-essential ccache libncurses5 libncursesw5-dev \
+    libssl-dev zlib1g-dev gawk flex bison git wget unzip xz-utils \
+    python3 python3-distutils
 ```
 
-### 2. Клонирование исходников
+### Clone and Setup
+
 ```bash
-git clone https://github.com/openwrt/openwrt.git
-cd openwrt
-```
+# Clone repository
+git clone https://github.com/your-repo/tenda-rx12l-pro-openwrt.git
+cd tenda-rx12l-pro-openwrt
 
-### 3. Применение патчей
-```bash
-# Скопировать файл DTS
-cp ../tenda-rx12l-pro/target/linux/mediatek/dts/mt7981b-tenda-rx12l-pro.dts target/linux/mediatek/dts/
-
-# Добавить устройство в конец target/linux/mediatek/image/filogic.mk
-# (см. файл patches/filogic.mk.patch)
-
-# Добавить в target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-# (см. файл patches/board.patch)
-
-# Добавить в target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh  
-# (см. файл patches/platform.patch)
-```
-
-### 4. Настройка и сборка
-```bash
-# Обновить feeds
+# Initialize submodules
+cd local-build/openwrt
 ./scripts/feeds update -a
 ./scripts/feeds install -a
 
-# Настроить
-make menuconfig
-# Выбрать: Target System -> MediaTek Ralink
-# Выбрать: Subtarget -> MediaTek Filogic based boards
-# Выбрать: Target Profile -> Tenda RX12L Pro
+# Setup Python 3.9 (required for OpenWrt 23.05)
+# Using pyenv:
+pyenv install 3.9.19
+pyenv local 3.9.19
+```
 
-# Собрать
+### Configure and Build
+
+```bash
+cd local-build/openwrt
+
+# Update configuration
+make defconfig
+
+# Optional: customize packages
+make menuconfig
+
+# Build firmware
 make -j$(nproc)
 ```
 
-## Прошивка
+### Output Files
 
-### Через UART (для кирпича)
-1. Подключиться к UART (115200 8N1)
-2. Загрузить через mtk_uartboot:
-```bash
-mtk_uartboot -p /dev/ttyUSB0 -b build_dir/target-aarch64_cortex-a53_musl/linux-mediatek_filogic/mediatek_mt7981_rfb.initramfs
+After build completes, firmware files are located in:
+```
+bin/targets/mediatek/filogic/
 ```
 
-### Через sysupgrade (для рабочих роутеров)
-```bash
-# Скачать прошивку
-wget https://github.com/ВАШ_РЕПОЗИТОРИЙ/releases/latest/openwrt-mediatek-filogic-tenda_rx12l-pro-squashfs-sysupgrade.bin
+Files:
+- `openwrt-mediatek-filogic-tenda_rx12l-pro-initramfs-kernel.bin` - Initramfs kernel (for first flash)
+- `openwrt-mediatek-filogic-tenda_rx12l-pro-squashfs-sysupgrade.bin` - Sysupgrade image
 
-# Прошить через web-интерфейс или scp
-scp openwrt-*.bin root@192.168.1.1:/tmp/
-ssh root@192.168.1.1 "sysupgrade /tmp/openwrt-*.bin"
+## Flash Instructions
+
+### Via Uboot (First Flash)
+
+1. Connect to router via serial console
+2. Set bootargs to load initramfs:
+```
+setenv bootargs console=ttyS0,115200 root=/dev/ram0
+tftpboot 0x44000000 openwrt-mediatek-filogic-tenda_rx12l-pro-initramfs-kernel.bin
+bootm
 ```
 
-## Особенности
-- Требуется 16MB NOR Flash
-- WiFi: 2.4GHz (574Mbps) + 5GHz (2402Mbps)
-- Поддержка Mesh (802.11s)
-- Поддержка VLAN
+### Via Sysupgrade
 
-## Ссылки
-- [OpenWrt Forum - Tenda RX12L Pro](https://forum.openwrt.org)
+```bash
+# SSH to router
+ssh root@192.168.1.1
+
+# Upload sysupgrade image
+sysupgrade -v /tmp/openwrt-mediatek-filogic-tenda_rx12l-pro-squashfs-sysupgrade.bin
+```
+
+## Notes
+
+- WiFi beamforming and MU-MIMO are supported by the mt76 driver (built-in)
+- For WiFi configuration, use standard OpenWrt wireless settings
+- Default IP: 192.168.1.1, no password (set on first login)
+
+## Hardware Notes
+
+- Flash layout: BL2 (256KB) + u-boot-env (64KB) + Factory (64KB) + bdinfo (64KB) + FIP (512KB) + firmware (~15MB)
+- Uses bdinfo partition for MAC addresses
+- 5 antennas: 2 for 2.4GHz, 3 for 5GHz (but 2x2 MIMO)
+
+## References
+
+- [OpenWrt MT7981 Support](https://openwrt.org/toh/mediatek/filogic)
 - [MediaTek MT7981 Datasheet](https://one.openwrt.org/hardware/MT7981B_Wi-Fi6_Platform_Datasheet_Open_V1.0.pdf)
+- [Tenda RX12L Pro Product Page](https://www.tendacn.com/product/overview/RX12LPro.html)

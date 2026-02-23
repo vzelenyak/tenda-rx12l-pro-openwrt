@@ -12,14 +12,12 @@ OpenWrt v23.05.5 support for Tenda RX12L Pro router.
 | Ethernet | 1x WAN + 3x LAN (1Gbps) |
 | WiFi | Dual-band AX3000 (2.4GHz: 574Mbps, 5GHz: 2402Mbps) |
 | Antennas | 5 external antennas |
-| USB | 1x USB 3.0 |
 
 ## Features Supported
 
 - OpenWrt v23.05.5
 - WiFi 6 (802.11ax) with MU-MIMO and OFDMA
 - Gigabit Ethernet (1 WAN + 3 LAN)
-- USB 3.0
 - SPI NOR Flash
 - LED configuration
 - GPIO buttons (Reset, WPS)

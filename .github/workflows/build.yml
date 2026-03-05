@@ -40,6 +40,11 @@ jobs:
           echo CONFIG_TARGET_mediatek_filogic=y >> .config
           echo CONFIG_TARGET_mediatek_filogic_Default=y >> .config
           echo CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tenda_rx12l_pro=y >> .config
+          echo CONFIG_PACKAGE_uhttpd=y >> .config
+          echo CONFIG_PACKAGE_luci=y >> .config
+          echo CONFIG_PACKAGE_luci-app-vlan=y >> .config
+          echo CONFIG_PACKAGE_irqbalance=y >> .config
+          echo CONFIG_PACKAGE_wpad-mesh-openssl=y >> .config
 
       - name: Pre-build verify
         run: |

@@ -60,7 +60,8 @@ jobs:
 
       - name: Build
         run: |
-          cd openwrt && make -j$(nproc) --debug > make.log 2>&1
+          cd openwrt
+          make V=s -j$(nproc) 2>&1 | tee make.log
 
       - name: Debug list output directory
         run: |

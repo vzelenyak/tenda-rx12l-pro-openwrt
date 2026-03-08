@@ -3,7 +3,7 @@
 #include <dt-bindings/leds/common.h>
 #include <dt-bindings/pinctrl/mt65xx.h>
 
-#include "mt7981b.dtsi"
+#include "mt7981.dtsi"
 
 / {
 	compatible = "tenda,rx12l-pro", "mediatek,mt7981";
@@ -159,7 +159,7 @@
 
 			factory: partition@50000 {
 				label = "Factory";
-				reg = <0x50000 0x20000>;
+				reg = <0x50000 0x10000>;
 				read-only;
 
 				nvmem-layout {
@@ -176,6 +176,12 @@
 						#nvmem-cell-cells = <1>;
 					};
 				};
+			};
+
+			bdinfo: partition@60000 {
+				label = "bdinfo";
+				reg = <0x60000 0x10000>;
+				read-only;
 			};
 
 			partition@70000 {

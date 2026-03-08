@@ -19,6 +19,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --fix-missing build-essential ccache git libncurses-dev python3-setuptools swig libssl-dev gettext rsync gawk unzip libncurses6 libncursesw6
 
+      - name: Setup Python 3.9
+        run: |
+          git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+          export PATH="$HOME/.pyenv/bin:$PATH"
+          eval "$(pyenv init -)"
+          pyenv install 3.9.19
+          pyenv global 3.9.19
+          echo "PATH=$HOME/.pyenv/shims:$PATH" >> $GITHUB_ENV
+
       - name: Clone OpenWrt
         run: git clone --depth 1 -b v23.05.5 https://github.com/openwrt/openwrt.git openwrt
 

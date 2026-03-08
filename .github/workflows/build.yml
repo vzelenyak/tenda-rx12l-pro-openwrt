@@ -77,6 +77,7 @@ jobs:
         run: |
           ls -la openwrt/bin/targets/mediatek/filogic/ || echo "Directory not found"
           find openwrt/bin -name "*.bin" -o -name "*.trx" | head -20
+          find openwrt -name "tenda*" -type f 2>/dev/null | head -20
 
       - name: Upload logs
         if: always()
@@ -89,7 +90,15 @@ jobs:
         if: success()
         run: |
           mkdir -p releases
-          cp openwrt/bin/targets/mediatek/filogic/openwrt-mediatek-filogic-tenda_rx12l_pro-*.bin releases/
+          FIRMFILE=$(find openwrt/bin/targets/mediatek/filogic -name "tenda_rx12l_pro-*.bin" 2>/dev/null | head -1)
+          if [ -n "$FIRMFILE" ]; then
+            cp "$FIRMFILE" releases/
+            echo "Copied: $FIRMFILE"
+          else
+            echo "ERROR: Firmware file not found!"
+            find openwrt/bin -name "*.bin" -type f | head -10
+            exit 1
+          fi
 
       - name: Upload artifacts
         if: success()

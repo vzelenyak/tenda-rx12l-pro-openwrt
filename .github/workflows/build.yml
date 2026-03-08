@@ -85,9 +85,17 @@ jobs:
           name: build-logs
           path: openwrt/make.log
 
+      - name: Copy firmware to releases
+        if: success()
+        run: |
+          mkdir -p releases
+          cp openwrt/bin/targets/mediatek/filogic/openwrt-mediatek-filogic-tenda_rx12l_pro-*.bin releases/
+
       - name: Upload artifacts
         if: success()
         uses: actions/upload-artifact@v4
         with:
           name: openwrt-firmware
-          path: openwrt/bin/targets/mediatek/filogic/*
+          path: |
+            openwrt/bin/targets/mediatek/filogic/*.bin
+            openwrt/bin/targets/mediatek/filogic/*.manifest

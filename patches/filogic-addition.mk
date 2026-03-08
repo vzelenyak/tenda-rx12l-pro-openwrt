@@ -9,7 +9,7 @@ define Device/tenda_rx12l-pro
   IMAGES := sysupgrade.bin
   IMAGE_SIZE := 15424k
   SUPPORTED_DEVICES += tenda,rx12l-pro
-  KERNEL := kernel-bin | lzma | fit lzma $$(KDER)/image-$$(firstword $$(DEVICE_DTS)).dtb
+  KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
   KERNEL_INITRAMFS := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
   IMAGE/sysupgrade.bin := append-kernel | pad-to 128k | append-rootfs | pad-rootfs | check-size | append-metadata
   DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware kmod-mt7915e uhttpd luci wpad-mesh-openssl luci-app-vlan irqbalance

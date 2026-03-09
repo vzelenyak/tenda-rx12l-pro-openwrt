@@ -95,13 +95,13 @@
 	gmac0: mac@0 {
 		compatible = "mediatek,eth-mac";
 		reg = <0>;
-		phy-mode = "rgmii";
+		phy-mode = "2500base-x";
 
 		nvmem-cell-names = "mac-address";
 		nvmem-cells = <&macaddr_factory_4>;
 
 		fixed-link {
-			speed = <1000>;
+			speed = <2500>;
 			full-duplex;
 			pause;
 		};
@@ -259,10 +259,10 @@
 			reg = <6>;
 			label = "cpu";
 			ethernet = <&gmac0>;
-			phy-mode = "rgmii";
+			phy-mode = "2500base-x";
 
 			fixed-link {
-				speed = <1000>;
+				speed = <2500>;
 				full-duplex;
 				pause;
 			};

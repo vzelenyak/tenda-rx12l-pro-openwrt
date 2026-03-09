@@ -90,7 +90,7 @@ jobs:
         if: success()
         run: |
           mkdir -p releases
-          FIRMFILE=$(find openwrt/bin/targets/mediatek/filogic -name "tenda_rx12l_pro-*.bin" 2>/dev/null | head -1)
+          FIRMFILE=$(find openwrt/bin/targets/mediatek/filogic -name "*tenda*rx12l*" 2>/dev/null | head -1)
           if [ -n "$FIRMFILE" ]; then
             cp "$FIRMFILE" releases/
             echo "Copied: $FIRMFILE"

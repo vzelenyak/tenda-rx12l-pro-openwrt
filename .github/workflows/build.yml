@@ -37,23 +37,18 @@ jobs:
       - name: Apply patches
         run: |
           cd openwrt
-          sed -i 's/yuncore,ax835)/yuncore,ax835| tenda,rx12l-pro)/g' target/linux/mediatek/filogic/base-files/etc/board.d/02_network
-          sed -i 's/yuncore,ax835)/yuncore,ax835| tenda,rx12l-pro)/g' target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
+          # Apply board.patch for network configuration
+          patch -p1 < ../patches/board.patch
+          # Apply platform.patch for upgrade support
+          patch -p1 < ../patches/platform.patch
+          # Add Tenda RX12L Pro device to filogic.mk
           cat ../patches/filogic-addition.mk >> target/linux/mediatek/image/filogic.mk
 
       - name: Configure
         run: |
           cd openwrt
-          echo CONFIG_TARGET_mediatek=y > .config
-          echo CONFIG_TARGET_mediatek_filogic=y >> .config
-          echo CONFIG_TARGET_mediatek_filogic_Default=y >> .config
-          echo CONFIG_TARGET_DEVICE_mediatek_filogic_DEVICE_tenda_rx12l_pro=y >> .config
-          echo CONFIG_PACKAGE_uhttpd=y >> .config
-          echo CONFIG_PACKAGE_luci=y >> .config
-          echo CONFIG_PACKAGE_luci-app-vlan=y >> .config
-          echo CONFIG_PACKAGE_irqbalance=y >> .config
-          echo CONFIG_PACKAGE_wpad-mesh-openssl=y >> .config
-          echo CONFIG_TARGET_INITRAMFS_COMPRESSION_ZSTD=y >> .config
+          # Use working .config with all packages
+          cp ../local-build/.config .config
           make defconfig
 
       - name: Pre-build verify

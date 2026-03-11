@@ -1,5 +1,4 @@
 
-
 define Device/tenda_rx12l-pro
   DEVICE_VENDOR := Tenda
   DEVICE_MODEL := RX12L Pro
@@ -10,8 +9,8 @@ define Device/tenda_rx12l-pro
   IMAGE_SIZE := 15424k
   SUPPORTED_DEVICES += tenda,rx12l-pro
   KERNEL := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb
-  KERNEL_INITRAMFS := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd | pad-to 64k
+  KERNEL_INITRAMFS := kernel-bin | lzma | fit lzma $$(KDIR)/image-$$(firstword $$(DEVICE_DTS)).dtb with-initrd 
   IMAGE/sysupgrade.bin := append-kernel | pad-to 128k | append-rootfs | pad-rootfs | check-size | append-metadata
-  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware kmod-mt7915e uhttpd luci wpad-mesh-openssl luci-app-vlan irqbalance
+  DEVICE_PACKAGES := kmod-mt7981-firmware mt7981-wo-firmware kmod-mt7915e kmod-mt7981 kmod-leds-gpio kmod-gpio-button-hotplug kmod-mt7530 kmod-mdio-device uhttpd luci wpad-mesh-openssl luci-app-vlan irqbalance
 endef
 TARGET_DEVICES += tenda_rx12l-pro

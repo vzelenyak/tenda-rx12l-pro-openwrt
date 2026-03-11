@@ -48,7 +48,7 @@ jobs:
         run: |
           cd openwrt
           # Use working .config with all packages
-          cp ../local-build/.config .config
+          cp ../patches/.config .config
           make defconfig
 
       - name: Pre-build verify

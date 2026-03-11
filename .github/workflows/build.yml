@@ -31,6 +31,12 @@ jobs:
       - name: Clone OpenWrt
         run: git clone --depth 1 -b v23.05.5 https://github.com/openwrt/openwrt.git openwrt
 
+      - name: Update and install feeds
+        run: |
+          cd openwrt
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
+
       - name: Copy DTS file
         run: cp patches/dts/mt7981b-tenda-rx12l-pro.dts openwrt/target/linux/mediatek/dts/
 

@@ -51,7 +51,7 @@ jobs:
         run: |
           cd openwrt
           cp ../patches/25.12/.config .config
-          make defconfig
+          make oldconfig
 
       - name: Pre-build verify
         run: |

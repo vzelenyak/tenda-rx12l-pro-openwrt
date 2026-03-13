@@ -40,8 +40,10 @@ jobs:
           sed -i 's/yuncore,ax835)/yuncore,ax835| tenda,rx12l-pro)/g' target/linux/mediatek/filogic/base-files/etc/board.d/02_network
           # Add Tenda RX12L Pro to platform upgrade
           sed -i 's/yuncore,ax835)/yuncore,ax835| tenda,rx12l-pro)/g' target/linux/mediatek/filogic/base-files/lib/upgrade/platform.sh
-          # Add Tenda RX12L Pro device to filogic.mk
-          cat ../patches/25.12/filogic-addition.mk >> target/linux/mediatek/image/filogic.mk
+          # Add Tenda RX12L Pro device to filogic.mk (check if not exists)
+          if ! grep -q "tenda_rx12l-pro" target/linux/mediatek/image/filogic.mk; then
+            cat ../patches/25.12/filogic-addition.mk >> target/linux/mediatek/image/filogic.mk
+          fi
 
       - name: Copy tenda-network package
         run: |
